@@ -4,6 +4,13 @@ Multinet is an add-on for Godot 4, which aims to provide easier access and setup
 
 The manager could be accessed from anywhere in the code and is used to configure the server and the client, manage multiplayer connections & lifecycle events, automatically track peer connection/disconnection, etc.
 
+> [!WARNING]
+> - This addon is not yet feature complete.
+>   - Missing features:
+>       - Client Interpolation & Extrapolation for synchronized variables
+>       - Server-side lag compensation for synchronized variables
+>   - This addon is developed and used actively for my own game. I try to keep things abstract always, but there could be occasions where I could make the implementation work as it suits my game specifically. This said I do not rule out suggestions for improvement or changes, but would rather not support custom implementations.
+
 ## **Table of Contents**
 
 - [**Multinet** *(Godot 4 Multiplayer C# addon)*](#multinet-godot-4-multiplayer-c-addon)
