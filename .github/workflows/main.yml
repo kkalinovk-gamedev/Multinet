@@ -1,0 +1,22 @@
+name: Zip Release
+on: 
+  workflow_dispatch:
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TheDoctor0/zip-release@0.7.6
+        with:
+          # Filename for archive
+          filename: multinet.zip
+          type: zip
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "multinet.zip"
