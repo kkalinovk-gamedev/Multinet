@@ -11,7 +11,16 @@ jobs:
           # Filename for archive
           filename: multinet.zip
           # Base path for archive files
-          path: ./releases
+          path: .
           # Working directory before zipping
           directory: .
           type: zip
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "multinet.zip"
