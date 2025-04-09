@@ -1,0 +1,17 @@
+name: Zip Release
+on: 
+  release:
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TheDoctor0/zip-release@0.7.6
+        with:
+          # Filename for archive
+          filename: multinet.zip
+          # Base path for archive files
+          path: ./releases
+          # Working directory before zipping
+          directory: .
+          type: zip
