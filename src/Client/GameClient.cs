@@ -14,6 +14,11 @@ public partial class GameClient : GodotObject
     [Signal]
     public delegate void JoinServerFailedEventHandler(int error);
 
+    /// <summary>
+    /// The time in ms that all clients are offset from the server.
+    /// </summary>
+    public float TimerOffset => configuration.ClientTimerOffset;
+
     private ClientConfiguration configuration = new();
 
     /// <summary>

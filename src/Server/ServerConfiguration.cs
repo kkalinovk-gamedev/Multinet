@@ -12,9 +12,6 @@ public partial class ServerConfiguration : Resource
     [Export]
     public CompressionMode ConnectionCompression = CompressionMode.RangeCoder;
 
-    /// <summary>
-    /// The interval in ms for syncing the server time in ms.
-    /// </summary>
     [Export]
     public float ServerTimeUpdateInterval = 100f;
 

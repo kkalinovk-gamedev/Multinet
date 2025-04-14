@@ -14,6 +14,9 @@ public partial class ClientConfiguration : Resource
     [Export]
     public ENetConnection.CompressionMode ConnectionCompression = ENetConnection.CompressionMode.RangeCoder;
 
+    [Export]
+    public float ClientTimerOffset = 30f;
+
     public override string ToString()
     {
         var sb = new StringBuilder();

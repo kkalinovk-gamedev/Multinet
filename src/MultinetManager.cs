@@ -176,12 +176,12 @@ public partial class MultinetManager : Node
     /// <summary>
     /// The server instance for the multiplayer game.
     /// </summary>
-    protected GameServer Server = new GameServer();
+    public GameServer Server = new GameServer();
 
     /// <summary>
     /// The client instance for the multiplayer game.
     /// </summary>
-    protected GameClient Client = new GameClient();
+    public GameClient Client = new GameClient();
 
     private float timeSinceLastUpdate = 0f;
 
@@ -209,7 +209,7 @@ public partial class MultinetManager : Node
             timeSinceLastUpdate += deltaInMs;
             ServerTime += deltaInMs;
 
-            if (timeSinceLastUpdate >= Server.TimeUpdateInterval)
+            if (timeSinceLastUpdate >= Server.TimerUpdateInterval)
             {
                 Rpc(nameof(UpdateServerTime), ServerTime);
                 timeSinceLastUpdate = 0f;
