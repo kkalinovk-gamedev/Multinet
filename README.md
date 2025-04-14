@@ -23,6 +23,7 @@ The manager could be accessed from anywhere in the code and is used to configure
     - [***Properties***](#properties)
     - [***Signals***](#signals)
   - [**MultiplayerNode**](#multiplayernode)
+  - [**API Documentation**](#api-documentation)
 
 ## **Server and Client Configuration**
 
@@ -152,3 +153,7 @@ The `MultiplayerNode` is designed to be set as root for any multiplayer scene wh
 
 > [!NOTE]
 > By using this node as a root to multiplayer scenes we ensure that the server and the client would have the exact same tree structure, which is crucial for making things work with Godot's multiplayer.
+
+## **API Documentation**
+
+[Here you can find the github pages of the API documentation](https://kkalinovk-gamedev.github.io/Multinet/index.html)
