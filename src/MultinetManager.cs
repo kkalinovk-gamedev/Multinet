@@ -183,6 +183,8 @@ public partial class MultinetManager : Node
     /// </summary>
     protected GameClient Client = new GameClient();
 
+    private float timeSinceLastUpdate = 0f;
+
     public override void _Ready()
     {
         Instance = this;
@@ -203,12 +205,22 @@ public partial class MultinetManager : Node
     {
         if (IsServer)
         {
-            ServerTime += (float)delta * 1000f;
-            Rpc(nameof(UpdateServerTime), ServerTime);
+            var deltaInMs = (float)delta * 1000f;
+            timeSinceLastUpdate += deltaInMs;
+            ServerTime += deltaInMs;
+
+            if (timeSinceLastUpdate >= Server.TimeUpdateInterval)
+            {
+                Rpc(nameof(UpdateServerTime), ServerTime);
+                timeSinceLastUpdate = 0f;
+            }
         }
         else
         {
             ClientTime += (float)delta * 1000f;
+
+            if (ServerTime - ClientTime > 1000f)
+                ClientTime = ServerTime;
         }
     }
 
@@ -347,7 +359,7 @@ public partial class MultinetManager : Node
     /// Broadcasts the server time to all clients.
     /// </summary>
     /// <param name="time">The time passed since game start in ms.</param>
-    [Rpc(RpcMode.Authority, TransferMode = TransferModeEnum.UnreliableOrdered)]
+    [Rpc(RpcMode.Authority, TransferMode = TransferModeEnum.Reliable)]
     private void UpdateServerTime(float time)
     {
         if (!IsServer)

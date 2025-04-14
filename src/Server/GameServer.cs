@@ -17,6 +17,11 @@ public partial class GameServer : GodotObject
     private ServerConfiguration configuration = new();
 
     /// <summary>
+    /// The interval in ms for syncing the server time in ms.
+    /// </summary>
+    public float TimeUpdateInterval => configuration.ServerTimeUpdateInterval;
+
+    /// <summary>
     /// Sets the server configuration for the multiplayer game.
     /// </summary>
     public void SetConfiguration(ServerConfiguration newConfiguration)
