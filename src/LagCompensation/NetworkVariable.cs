@@ -1,30 +1,30 @@
 using Godot;
-using Godot.Collections;
+using System.Linq;
 
 namespace Multinet.LagCompensation;
 
-public partial class NetworkVariable<T> : GodotObject
+public partial class NetworkVariable : GodotObject
 {
     public int InterpolationOffset { get; set; } = 30;
 
-    public T Value => GetValue();
+    public Variant Value => GetValue();
 
     protected float ServerTime => MultinetManager.Instance.ServerTime;
     protected float ClientTime => MultinetManager.Instance.ClientTime;
-    protected Array<NetworkVariableState<T>> Buffer => buffer;
-    protected T DefaultValue;
+    protected NetworkBuffer Buffer => buffer;
+    protected Variant DefaultValue;
 
-    private Array<NetworkVariableState<T>> buffer = new();
+    private NetworkBuffer buffer;
 
-    public NetworkVariable(T defaultValue = default)
+    public NetworkVariable(Variant defaultValue)
     {
         DefaultValue = defaultValue;
+        buffer = new(DefaultValue.VariantType);
     }
 
-    public void Update(T value)
+    public void Update(Variant value)
     {
-        var state = new NetworkVariableState<T>(ServerTime, value);
-        buffer.Add(state);
+        AddValue(ServerTime, value);
     }
 
     public void ClearBuffer()
@@ -32,31 +32,62 @@ public partial class NetworkVariable<T> : GodotObject
         buffer.Clear();
     }
 
-    private T GetValue()
+    private Variant GetValue()
     {
-        T result = default;
-
-        if (buffer.Count == 0 || ServerTime > buffer[buffer.Count - 1].Timestamp)
+        if (buffer.Count == 0)
         {
-            buffer.Add(new NetworkVariableState<T>(ServerTime, DefaultValue));
+            return DefaultValue;
         }
 
-        float renderTime = ClientTime - InterpolationOffset;
-
-        if (buffer.Count > 2)
-        {
-            while (buffer.Count > 2 && renderTime > buffer[1].Timestamp)
-            {
-                buffer.RemoveAt(0);
-            }
-
-            result = ValueInterpolator<T>.Interpolate(renderTime, buffer);
-        }
-        else if (buffer.Count == 2 && renderTime > buffer[1].Timestamp)
-        {
-            result = ValueExtrapolator<T>.Extrapolate(renderTime, buffer);
-        }
-
+        var result = buffer.Last().Value;
+        buffer.Clear();
+        AddValue(ServerTime, result);
         return result;
+
+        //if (MultinetManager.Instance.IsServer)
+        //{
+        //    if (buffer.Count == 0)
+        //    {
+        //        return DefaultValue;
+        //    }
+
+        //    return buffer.Last().Value;
+        //}
+
+        //Variant result = default;
+
+        //if (buffer.Count == 0 || ServerTime > buffer.ElementAt(buffer.Count - 1).Key)
+        //{
+        //    if (buffer.Count == 0)
+        //        AddValue(ServerTime, DefaultValue);
+        //    else
+        //        AddValue(ServerTime, buffer.Last().Value);
+        //}
+
+        //float renderTime = ClientTime - InterpolationOffset;
+
+        //if (buffer.Count > 2)
+        //{
+        //    while (buffer.Count > 2 && renderTime > buffer.ElementAt(1).Key)
+        //    {
+        //        buffer.Remove(buffer.First().Key);
+        //    }
+
+        //    result = buffer.Interpolate(renderTime);
+        //}
+        //else if (buffer.Count == 2 && renderTime > buffer.ElementAt(1).Key)
+        //{
+        //    result = buffer.Extrapolate(renderTime);
+        //}
+
+        //return result;
+    }
+
+    private void AddValue(float serverTime, Variant value)
+    {
+        if (buffer.ContainsKey(serverTime))
+            buffer[serverTime] = value;
+        else
+            buffer.Add(serverTime, value);
     }
 }
